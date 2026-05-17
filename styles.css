@@ -1,0 +1,235 @@
+/* ============================================
+   Main Styles - قرطاسية وهج
+   ============================================ */
+
+/* Body and Base Styles */
+body {
+    font-family: 'Cairo', sans-serif;
+    scroll-behavior: smooth;
+    line-height: 1.6;
+}
+
+/* Hero Section Background */
+.hero-gradient {
+    background: linear-gradient(
+        rgba(16, 42, 67, 0.9),
+        rgba(16, 42, 67, 0.8)
+    ), url('https://images.unsplash.com/photo-1456735190827-d1262f71b8a3?auto=format&fit=crop&q=80&w=1200');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+/* Product Card Image Animation */
+.product-card-img {
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.group:hover .product-card-img {
+    transform: scale(1.1);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #F8F5F0;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #102A43;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #F59E0B;
+}
+
+/* Firefox Scrollbar */
+* {
+    scrollbar-color: #102A43 #F8F5F0;
+    scrollbar-width: thin;
+}
+
+/* Button Focus State */
+button:focus-visible {
+    outline: 2px solid #F59E0B;
+    outline-offset: 2px;
+}
+
+/* Smooth Transitions */
+a,
+button {
+    transition: all 0.3s ease;
+}
+
+/* Responsive Images */
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Tooltip Styling */
+.tooltip {
+    position: relative;
+    cursor: help;
+}
+
+.tooltip:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #102A43;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    white-space: nowrap;
+    font-size: 12px;
+    z-index: 1000;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Loading Animation */
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.animate-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Fade In Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fadeIn {
+    animation: fadeIn 0.6s ease-out;
+}
+
+/* Slide In Animation */
+@keyframes slideIn {
+    from {
+        transform: translateX(-100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+.animate-slideIn {
+    animation: slideIn 0.5s ease-out;
+}
+
+/* Form Input Focus */
+input:focus {
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+}
+
+/* Mobile Optimization */
+@media (max-width: 768px) {
+    .hero-gradient {
+        background-attachment: scroll;
+    }
+
+    .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    button {
+        min-height: 44px;
+        min-width: 44px;
+    }
+
+    /* Mobile Navigation */
+    nav {
+        padding: 0.5rem 1rem;
+    }
+
+    /* Hero Text Responsiveness */
+    h1 {
+        font-size: 2rem;
+    }
+
+    h2 {
+        font-size: 1.875rem;
+    }
+
+    /* Product Grid */
+    .grid {
+        gap: 1rem;
+    }
+
+    /* Cart Sidebar */
+    #cartSidebar {
+        width: 100%;
+    }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    ::-webkit-scrollbar-track {
+        background: #1a1a1a;
+    }
+
+    input {
+        background: #2a2a2a;
+        color: white;
+        border-color: #3a3a3a;
+    }
+}
+
+/* Print Styles */
+@media print {
+    nav,
+    #cartSidebar,
+    #toast {
+        display: none;
+    }
+
+    body {
+        background: white;
+    }
+
+    .hero-gradient {
+        background: none;
+    }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Selection Styling */
+::selection {
+    background-color: #F59E0B;
+    color: white;
+}
+
+::-moz-selection {
+    background-color: #F59E0B;
+    color: white;
+}

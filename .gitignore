@@ -1,0 +1,85 @@
+# Dependency directories
+node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+yarn.lock
+
+# Build outputs
+dist/
+build/
+out/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+*.sublime-project
+*.sublime-workspace
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+
+# Development files
+.env
+.env.local
+.env.*.local
+
+# Backup files
+*.bak
+*.tmp
+*~
+*.backup
+
+# Lock files (for production)
+# Uncomment if you want to ignore lock files
+# package-lock.json
+# yarn.lock
+
+# Compiled files
+*.min.js
+*.min.css
+
+# Cache
+.cache/
+*.cache
+
+# Logs
+logs/
+*.log
+
+# Temporary files
+temp/
+tmp/
+.temp/
+
+# Hidden files (except .gitignore)
+.*
+!.gitignore
+!.github/
+
+# VS Code settings (optional - comment to keep them)
+# .vscode/settings.json
+# .vscode/extensions.json
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Configuration files
+config.local.js
+config.dev.js
+
+# Documentation build files
+docs/_build/
+site/
