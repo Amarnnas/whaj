@@ -7,23 +7,10 @@
     
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Tailwind Config -->
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        wahajDeepNavy: '#102A43',
-                        wahajGlowAmber: '#F59E0B',
-                        softSand: '#F8F5F0',
-                        whatsappGreen: '#25D366'
-                    }
-                }
-            }
-        }
-    </script>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="tailwind.config.js"></script>
     
     <!-- Custom Styles -->
     <link rel="stylesheet" href="styles.css">
@@ -38,9 +25,9 @@
     <!-- Navigation -->
     <nav class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-sm border-b border-softSand transition-all duration-300">
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="flex items-center gap-4">
+            <div class="flex items-center gap-2">
                 <a href="#home" class="flex items-center gap-3">
-                    <div class="bg-wahajDeepNavy text-white p-2 rounded-xl font-black text-xl hover:bg-wahajGlowAmber hover:text-wahajDeepNavy transition-colors">W</div>
+                    <img src="logo.svg" alt="شعار وهج" class="h-12 w-12 object-contain hover:scale-110 transition-transform">
                     <div class="leading-none">
                         <span class="text-3xl font-black text-wahajDeepNavy">وهج</span>
                         <p class="text-[10px] tracking-widest text-wahajGlowAmber font-bold uppercase">Stationery</p>
@@ -279,7 +266,7 @@
         <div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-12">
             <div class="space-y-4">
                 <a href="#home" class="flex items-center gap-3 w-max">
-                    <div class="bg-wahajGlowAmber text-wahajDeepNavy p-2 rounded-xl font-black text-lg">W</div>
+                    <img src="logo.svg" alt="شعار وهج" class="h-10 w-10 object-contain">
                     <span class="text-2xl font-black">وهج للقرطاسية</span>
                 </a>
                 <p class="text-sm text-slate-300 leading-relaxed font-semibold mt-4">
