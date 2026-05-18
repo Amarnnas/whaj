@@ -184,6 +184,216 @@ function sendToWhatsApp() {
 }
 
 /**
+ * Filter products based on search input
+ */
+function filterProducts() {
+    const query = document.getElementById('searchInput').value.toLowerCase();
+    const productsGrid = document.getElementById('productsGrid');
+    if (!productsGrid) return;
+    
+    const productCards = productsGrid.querySelectorAll('.group');
+    
+    productCards.forEach(card => {
+        const title = card.querySelector('h3').innerText.toLowerCase();
+        if (title.includes(query)) {
+            card.style.display = 'block';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+
+/**
+ * Mock Google Login
+ */
+let isLoggedIn = false;
+function mockGoogleLogin() {
+    isLoggedIn = !isLoggedIn;
+    const btn = document.getElementById('googleLoginBtn');
+    const text = document.getElementById('loginText');
+    
+    if (isLoggedIn) {
+        text.innerText = 'أحمد';
+        btn.classList.add('bg-slate-100');
+        showToast('تم تسجيل الدخول بنجاح عبر قوقل!');
+    } else {
+        text.innerText = 'دخول';
+        btn.classList.remove('bg-slate-100');
+        showToast('تم تسجيل الخروج');
+    }
+}
+
+/**
+ * Submit Feedback
+ */
+function submitFeedback(e) {
+    e.preventDefault();
+    const name = document.getElementById('feedbackName').value || 'عميل';
+    document.getElementById('feedbackText').value = '';
+    document.getElementById('feedbackName').value = '';
+    
+    showToast(`شكراً لك يا ${name} على مقترحك!`);
+}
+
+/**
+ * Toggle Payment Method
+ */
+function togglePaymentMethod() {
+    const isBank = document.querySelector('input[name="payment_method"]:checked').value === 'bank';
+    const bankDetails = document.getElementById('bankDetailsContainer');
+    
+    if (isBank) {
+        bankDetails.classList.remove('hidden');
+    } else {
+        bankDetails.classList.add('hidden');
+    }
+}
+
+/**
+ * Update Bank Info based on selection
+ */
+const bankData = {
+    khartoum: { name: 'بنك الخرطوم (حساب مؤسسة)', account: '1234567' },
+    omdurman: { name: 'بنك أمدرمان الوطني (وهج)', account: '9876543' },
+    faisal: { name: 'بنك فيصل الإسلامي (وهج)', account: '4561230' },
+    islamic: { name: 'البنك الإسلامي السوداني (وهج)', account: '7418529' },
+    cashi: { name: 'حساب كاشي (وهج للخدمات)', account: '0900079075' }
+};
+
+function updateBankInfo() {
+    const bank = document.getElementById('bankSelect').value;
+    const infoContainer = document.getElementById('bankAccountInfo');
+    const accNum = document.getElementById('accountNumber');
+    const accName = document.getElementById('accountName');
+    
+    if (bank && bankData[bank]) {
+        accNum.innerText = bankData[bank].account;
+        accName.innerText = bankData[bank].name;
+        infoContainer.classList.remove('hidden');
+    }
+}
+
+/**
+ * Process Checkout
+ */
+function processCheckout() {
+    const customer = validateCustomerData();
+    if (!customer) return;
+    
+    const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
+    
+    if (paymentMethod === 'bank') {
+        const bank = document.getElementById('bankSelect').value;
+        const receipt = document.getElementById('transferReceipt').files.length;
+        
+        if (!bank) {
+            showToast('يرجى اختيار البنك');
+            return;
+        }
+        if (receipt === 0) {
+            showToast('يرجى إرفاق إشعار التحويل لتأكيد الدفع');
+            return;
+        }
+    }
+    
+    // Generate mock order ID
+    const orderId = 'WHJ-' + Math.floor(1000 + Math.random() * 9000);
+    
+    // Save to local storage for tracking
+    const orderData = {
+        id: orderId,
+        status: paymentMethod === 'bank' ? 'review' : 'received', 
+        date: new Date().toISOString()
+    };
+    
+    let orders = JSON.parse(localStorage.getItem('whaj_orders') || '[]');
+    orders.push(orderData);
+    localStorage.setItem('whaj_orders', JSON.stringify(orders));
+    
+    // Format message for WhatsApp
+    const total = cart.reduce((acc, item) => acc + item.price, 0);
+    let message = `*🛍️ طلب شراء جديد: ${orderId}*\n\n`;
+    message += `▪️ الاسم: ${customer.name}\n`;
+    message += `▪️ الهاتف: ${customer.phone}\n`;
+    message += `▪️ التوصيل: ${customer.address}\n`;
+    message += `▪️ طريقة الدفع: ${paymentMethod === 'bank' ? 'تحويل بنكي (تم رفع الإشعار في النظام)' : 'الدفع عند الاستلام'}\n\n`;
+    
+    cart.forEach((item, index) => {
+        message += `${index + 1}. ${item.name} - ${item.price.toLocaleString()} ج.س\n`;
+    });
+    
+    message += `\n*💰 الإجمالي: ${total.toLocaleString()} ج.س*\n\n`;
+    
+    showToast(`تم استلام طلبك! رقم الطلب: ${orderId}`);
+    
+    // Clear cart and form
+    cart = [];
+    updateCartUI();
+    document.getElementById('customer-name').value = '';
+    document.getElementById('customer-phone').value = '';
+    document.getElementById('customer-address').value = '';
+    if (paymentMethod === 'bank') {
+        document.getElementById('transferReceipt').value = '';
+        document.getElementById('bankSelect').value = '';
+        document.getElementById('bankAccountInfo').classList.add('hidden');
+    }
+    toggleCart();
+    
+    // Open WhatsApp
+    setTimeout(() => {
+        window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
+        document.getElementById('order-tracking').scrollIntoView({ behavior: 'smooth' });
+    }, 1500);
+}
+
+/**
+ * Track Order
+ */
+function trackOrder(e) {
+    e.preventDefault();
+    const orderId = document.getElementById('trackingIdInput').value.trim().toUpperCase();
+    
+    let orders = JSON.parse(localStorage.getItem('whaj_orders') || '[]');
+    const order = orders.find(o => o.id === orderId);
+    
+    const resultDiv = document.getElementById('trackingResult');
+    const statusText = document.getElementById('trackStatusText');
+    const progressLine = document.getElementById('trackProgressLine');
+    const step3 = document.getElementById('step3Icon');
+    const step4 = document.getElementById('step4Icon');
+    
+    resultDiv.classList.remove('hidden');
+    
+    if (order) {
+        if (order.status === 'review') {
+            statusText.innerText = 'جاري مراجعة إشعار الدفع';
+            progressLine.style.width = '33%';
+            step3.classList.remove('bg-wahajGlowAmber', 'text-wahajDeepNavy');
+            step4.classList.remove('bg-wahajGlowAmber', 'text-wahajDeepNavy');
+        } else if (order.status === 'received') {
+            statusText.innerText = 'تم الاستلام وجاري التجهيز';
+            progressLine.style.width = '33%'; 
+            step3.classList.remove('bg-wahajGlowAmber', 'text-wahajDeepNavy');
+            step4.classList.remove('bg-wahajGlowAmber', 'text-wahajDeepNavy');
+        }
+    } else {
+        if (orderId.startsWith('WHJ-')) {
+            statusText.innerText = 'قيد التوصيل';
+            progressLine.style.width = '66%';
+            step3.classList.add('bg-wahajGlowAmber', 'text-wahajDeepNavy', 'shadow-md');
+            step3.classList.remove('bg-slate-200', 'text-slate-500');
+            step4.classList.remove('bg-wahajGlowAmber', 'text-wahajDeepNavy');
+        } else {
+            statusText.innerText = 'الطلب غير موجود';
+            progressLine.style.width = '0%';
+            step3.classList.remove('bg-wahajGlowAmber', 'text-wahajDeepNavy', 'shadow-md');
+            step3.classList.add('bg-slate-200', 'text-slate-500');
+            step4.classList.remove('bg-wahajGlowAmber', 'text-wahajDeepNavy');
+        }
+    }
+}
+
+/**
  * Initialize the application
  */
 function initApp() {
@@ -216,3 +426,4 @@ document.addEventListener('DOMContentLoaded', initApp);
 
 // Also initialize on page load
 window.addEventListener('load', initApp);
+
